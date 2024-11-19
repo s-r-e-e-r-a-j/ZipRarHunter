@@ -41,7 +41,6 @@ print("""\033[0;36m
 \n
 \033[0m""")
 
-print("\n");
 # Function to crack ZIP password
 def crack_zip(zip_file, wordlist, color_output):
     with open(wordlist, 'r', encoding='utf-8') as f:
