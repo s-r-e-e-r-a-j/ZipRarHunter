@@ -31,7 +31,7 @@ print("""\033[0;36m
 \033[1;33m
 **************************************************
 \n
-* copyright of sreeraj,2024                      *
+* copyright of Sreeraj,2024                      *
 \n
 * www.youtube.com/@debugspecter                  *
 \n
