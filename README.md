@@ -17,28 +17,37 @@ You can install the required Python packages using `pip`:
 pip install rarfile
 ```
 ## Installation
-1.**Clone the repository:**
-
-```bash
-git clone https://github.com/s-r-e-e-r-a-j/ZipRarHunter.git
-```
-2. **Navigate into the directory:**
-
-```bash
-cd ZipRarHunter
-```
-3.**Ensure all dependencies are installed. If not, run:**
+1.**Ensure all dependencies are installed. If not, run:**
 
 ``` bash
 pip install -r requirements.txt
 ```
+
+2.**Clone the repository:**
+
+```bash
+git clone https://github.com/s-r-e-e-r-a-j/ZipRarHunter.git
+```
+3. **Navigate into the directory:**
+
+```bash
+cd ZipRarHunter
+```
+```bash
+  cd ZipRarHunter
+```
+4. **install the tool**
+```bash
+   sudo python3 install.py
+```
+**then enter `y` for install**
 ## Usage
 ZipRarHunter uses command-line arguments to specify the target file, wordlist, and file type (ZIP or RAR).
 
 ## Basic Usage
 ```bash
-python ZipRarHunter.py -f /path/to/archive.zip -w /path/to/wordlist.txt -t zip
-python ZipRarHunter.py -f /path/to/archive.rar -w /path/to/wordlist.txt -t rar
+ziprarhunter -f /path/to/archive.zip -w /path/to/wordlist.txt -t zip
+ziprarhunter -f /path/to/archive.rar -w /path/to/wordlist.txt -t rar
 ```
 ## Command-line Arguments
 - `-f` or `--file`: The path to the ZIP or RAR file you want to crack.
@@ -49,17 +58,17 @@ python ZipRarHunter.py -f /path/to/archive.rar -w /path/to/wordlist.txt -t rar
 1. **Crack a ZIP file with a wordlist:**
 
 ``` bash
-python ZipRarHunter.py -f /path/to/archive.zip -w /path/to/wordlist.txt -t zip
+ziprarhunter -f /path/to/archive.zip -w /path/to/wordlist.txt -t zip
 ```
 2. **Crack a RAR file with a wordlist:**
 
 ```bash
-python ZipRarHunter.py -f /path/to/archive.rar -w /path/to/wordlist.txt -t rar
+ziprarhunter -f /path/to/archive.rar -w /path/to/wordlist.txt -t rar
 ```
 3. **Disable colored output:**
 
 ```bash
-python ZipRarHunter.py -f /path/to/archive.zip -w /path/to/wordlist.txt -t zip --no-color
+ziprarhunter -f /path/to/archive.zip -w /path/to/wordlist.txt -t zip --no-color
 ```
 ## Output Example
 ```bash
@@ -72,6 +81,19 @@ Password found for ZIP file: password123
 2. **RAR File Cracking**: The program opens the RAR file using the rarfile module and attempts to extract the first file in the archive using each password from the wordlist. If the extraction succeeds, the password is deemed correct, and the program exits.
 
 3. **Real-Time Feedback**: Each password attempt is displayed on the screen in real time. The current password is shown with color-coded output to indicate progress.
+
+## uninstallation
+```bash
+   cd ZipRarHunter
+```
+```bash
+   cd ZipRarHunter
+```
+```bash
+   sudo python3 install.py
+```
+**Then Enter `n` for uninstall**
+
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
