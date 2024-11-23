@@ -34,11 +34,11 @@ git clone https://github.com/s-r-e-e-r-a-j/ZipRarHunter.git
 cd ZipRarHunter
 ```
 ```bash
-  cd ZipRarHunter
+cd ZipRarHunter
 ```
 4. **install the tool**
 ```bash
-   sudo python3 install.py
+sudo python3 install.py
 ```
 **then enter `y` for install**
 ## Usage
@@ -84,13 +84,13 @@ Password found for ZIP file: password123
 
 ## uninstallation
 ```bash
-   cd ZipRarHunter
+cd ZipRarHunter
 ```
 ```bash
-   cd ZipRarHunter
+cd ZipRarHunter
 ```
 ```bash
-   sudo python3 install.py
+sudo python3 install.py
 ```
 **Then Enter `n` for uninstall**
 
