@@ -24,11 +24,11 @@ print("""\033[0;36m
          |_|        
 \033[0m
 \n
-*\033[1;33m copyright of Sreeraj,2024       *
+\033[1;33m*copyright of Sreeraj,2024          *
 \n
-* www.youtube.com/@debugspecter             *
+* www.youtube.com/@debugspecter               *
 \n
-* https://github.com/s-r-e-e-r-a-j          *\n
+* https://github.com/s-r-e-e-r-a-j            *\n
 \033[0m""")
 
 # Function to crack ZIP password
