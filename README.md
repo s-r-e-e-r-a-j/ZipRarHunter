@@ -17,13 +17,8 @@ You can install the required Python packages using `pip`:
 pip install rarfile
 ```
 ## Installation
-1.**Ensure all dependencies are installed. If not, run:**
 
-``` bash
-pip install -r requirements.txt
-```
-
-2.**Clone the repository:**
+1.**Clone the repository:**
 
 ```bash
 git clone https://github.com/s-r-e-e-r-a-j/ZipRarHunter.git
@@ -32,6 +27,11 @@ git clone https://github.com/s-r-e-e-r-a-j/ZipRarHunter.git
 
 ```bash
 cd ZipRarHunter
+```
+2. **Ensure all dependencies are installed. If not, run:**
+
+``` bash
+pip install -r requirements.txt
 ```
 ```bash
 cd ZipRarHunter
