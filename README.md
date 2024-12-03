@@ -33,10 +33,12 @@ cd ZipRarHunter
 ``` bash
 pip install -r requirements.txt
 ```
+
+4. **install the tool**
+   
 ```bash
 cd ZipRarHunter
-```
-4. **install the tool**
+``` 
 ```bash
 sudo python3 install.py
 ```
