@@ -23,7 +23,7 @@ pip install rarfile
 ```bash
 git clone https://github.com/s-r-e-e-r-a-j/ZipRarHunter.git
 ```
-2. **Navigate into the directory:**
+2. **Navigate to the ZipRarHunter directory:**
 
 ```bash
 cd ZipRarHunter
@@ -34,11 +34,12 @@ cd ZipRarHunter
 pip install -r requirements.txt
 ```
 
-4. **install the tool**
+4. **Navigate to the ZipRarHunter directory**
    
 ```bash
 cd ZipRarHunter
-``` 
+```
+5. **Install the tool**
 ```bash
 sudo python3 install.py
 ```
