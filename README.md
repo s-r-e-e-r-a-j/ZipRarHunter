@@ -18,7 +18,7 @@ pip install rarfile
 ```
 ## Installation
 
-1.**Clone the repository:**
+1. **Clone the repository:**
 
 ```bash
 git clone https://github.com/s-r-e-e-r-a-j/ZipRarHunter.git
