@@ -25,7 +25,7 @@ print("""\033[0;36m
          
 \033[0m
 \033[1;33m* Copyright © Sreeraj, 2024   
-*GitHub: https://github.com/s-r-e-e-r-a-j \n
+* GitHub: https://github.com/s-r-e-e-r-a-j \n
 \033[0m""")
 
 # Function to crack ZIP password
