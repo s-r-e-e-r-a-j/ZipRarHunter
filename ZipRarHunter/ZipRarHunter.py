@@ -24,7 +24,7 @@ print("""\033[0;36m
          |_|        
 \033[0m
 \n
-\033[1;33m*  copyright © Sreeraj, 2024   *
+\033[1;33m*  Copyright © Sreeraj, 2024   *
 \n
 *  www.youtube.com/@debugspecter   *
 \n
