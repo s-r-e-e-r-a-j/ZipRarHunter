@@ -12,7 +12,8 @@ ZipRarHunter is a command-line password cracking tool designed to crack password
 - **Dependencies:**
 - `pyzipper` (for handling ZIP files)
 - `rarfile` (for handling RAR files)
-You can install the required Python packages using `pip3`:
+  
+-You can install the required Python packages using:
 ```bash
 pip3 install -r requirements.txt
 ```
