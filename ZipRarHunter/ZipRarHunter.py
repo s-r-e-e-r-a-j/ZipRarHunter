@@ -147,12 +147,13 @@ def main():
         sys.exit(1)
 
     if filetype == "zip":
+        os.system("clear")
         banner()
         crack_zip(file, wordlist, color_output)
     elif filetype == "rar":
         banner()
         install_unrar_if_needed();
-        os.system("clear");
+        os.system("clear")
         banner()
         crack_rar(file, wordlist, color_output)
     else:
