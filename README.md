@@ -79,12 +79,6 @@ ziprarhunter -f /path/to/archive.zip -w /path/to/wordlist.txt -t zip --no-color
 Trying password: password123
 Password found for ZIP file: password123
 ```
-## How It Works
-1. **ZIP File Cracking**: The program opens the ZIP file using the zipfile module and sets the password for each attempt. It then uses testzip() to check if the password is correct. If the password is valid, it prints the success message and exits.
-
-2. **RAR File Cracking**: The program opens the RAR file using the rarfile module and attempts to extract the first file in the archive using each password from the wordlist. If the extraction succeeds, the password is deemed correct, and the program exits.
-
-3. **Real-Time Feedback**: Each password attempt is displayed on the screen in real time. The current password is shown with color-coded output to indicate progress.
 
 ## uninstallation
 ```bash
