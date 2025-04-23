@@ -2,6 +2,8 @@ import pyzipper
 import rarfile
 import os
 import sys
+import subprocess
+import shutil
 import argparse
 
 # ANSI color codes
@@ -59,6 +61,28 @@ def crack_zip(zip_file, wordlist, color_output):
         print(f"{RED}Password not found for ZIP file.{RESET}")
     else:
         print(f"Password not found for ZIP file.")
+
+def install_unrar_if_needed():
+    if shutil.which("unrar"):
+        return  # Already installed
+
+    print("[*] 'unrar' not found. Attempting installation using apt...")
+
+    try:
+        if os.geteuid() != 0:
+            # Not running as root, use sudo
+            subprocess.run(["sudo", "apt", "update"], check=True)
+            subprocess.run(["sudo", "apt", "install", "-y", "unrar"], check=True)
+        else:
+            # Already root
+            subprocess.run(["apt", "update"], check=True)
+            subprocess.run(["apt", "install", "-y", "unrar"], check=True)
+
+        print("[+] 'unrar' installed successfully.")
+
+    except subprocess.CalledProcessError as e:
+        print(f"[!] Failed to install unrar: {e}")
+        sys.exit(1)
 
 # Function to crack RAR password
 def crack_rar(rar_file, wordlist, color_output):
@@ -123,6 +147,7 @@ def main():
     if filetype == "zip":
         crack_zip(file, wordlist, color_output)
     elif filetype == "rar":
+        install_unrar_if_needed();
         crack_rar(file, wordlist, color_output)
     else:
         print(f"{RED}Invalid file type. Use 'zip' or 'rar'.{RESET}")
