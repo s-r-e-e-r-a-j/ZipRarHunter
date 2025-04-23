@@ -6,7 +6,7 @@ ZipRarHunter is a command-line password cracking tool designed to crack password
 - **Wordlist-based Cracking:** The tool uses a wordlist (a file containing potential passwords) to attempt cracking the password.
 
 - **Real-time Feedback:** It shows the current password being attempted in real time, so you can track the progress.
-- **Cross-platform:** This tool works on Linux distributions (with Python installed).
+- **Supported OS:** Linux only (Tested on Kali, Ubuntu, etc.)
 ## Requirements
 - **Python 3.x:** Ensure that Python 3 is installed on your system.
 - **Dependencies:**
