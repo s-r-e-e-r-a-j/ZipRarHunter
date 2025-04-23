@@ -1,4 +1,4 @@
-import zipfile
+import pyzipper
 import rarfile
 import os
 import sys
@@ -31,27 +31,28 @@ print("""\033[0;36m
 def crack_zip(zip_file, wordlist, color_output):
     with open(wordlist, 'r', encoding='utf-8') as f:
         for password in f:
-            password = password.strip()  # Remove trailing newlines and spaces
+            password = password.strip()
             if not password:
-                continue  # Skip empty lines
+                continue
 
-            # Display current password attempt
             if color_output:
                 print(f"{BLUE}Trying password: {password}{RESET}")
             else:
                 print(f"Trying password: {password}")
 
             try:
-                with zipfile.ZipFile(zip_file) as zf:
-                    zf.setpassword(password.encode())
-                    # Try to extract the contents to verify the password
-                    if zf.testzip() is None:  # testzip returns None if no error
-                        if color_output:
-                            print(f"{GREEN}Password found for ZIP file: {password}{RESET}")
-                        else:
-                            print(f"Password found for ZIP file: {password}")
-                        return
-            except (RuntimeError, zipfile.BadZipFile):
+                with pyzipper.AESZipFile(zip_file) as zf:
+                    zf.pwd = password.encode()
+                    # Try to read a file to verify password
+                    test_file = zf.namelist()[0]
+                    zf.read(test_file)
+
+                    if color_output:
+                        print(f"{GREEN}Password found for ZIP file: {password}{RESET}")
+                    else:
+                        print(f"Password found for ZIP file: {password}")
+                    return
+            except (RuntimeError, pyzipper.BadZipFile, pyzipper.LargeZipFile, Exception):
                 continue
 
     if color_output:
