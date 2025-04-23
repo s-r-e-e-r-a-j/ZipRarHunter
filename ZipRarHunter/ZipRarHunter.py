@@ -13,21 +13,23 @@ BLUE = '\033[1;34m'
 YELLOW = '\033[1;33m'
 RESET = '\033[0m'
 
-print("""\033[0;36m
+def banner():
+
+     print("""\033[0;36m
 
 
-  _______       _____            _    _             _            
- |___  (_)     |  __ \          | |  | |           | |           
-    / / _ _ __ | |__) |__ _ _ __| |__| |_   _ _ __ | |_ ___ _ __ 
-   / / | | '_ \|  _  // _` | '__|  __  | | | | '_ \| __/ _ \ '__|
-  / /__| | |_) | | \ \ (_| | |  | |  | | |_| | | | | ||  __/ |   
- /_____|_| .__/|_|  \_\__,_|_|  |_|  |_|\__,_|_| |_|\__\___|_|   
-         | |                                                     
-         |_|                               Developer: Sreeraj
+      _______       _____            _    _             _            
+     |___  (_)     |  __ \          | |  | |           | |           
+        / / _ _ __ | |__) |__ _ _ __| |__| |_   _ _ __ | |_ ___ _ __ 
+       / / | | '_ \|  _  // _` | '__|  __  | | | | '_ \| __/ _ \ '__|
+      / /__| | |_) | | \ \ (_| | |  | |  | | |_| | | | | ||  __/ |   
+     /_____|_| .__/|_|  \_\__,_|_|  |_|  |_|\__,_|_| |_|\__\___|_|   
+             | |                                                     
+             |_|                               Developer: Sreeraj
          
-\033[0m
-\033[1;33m* GitHub: https://github.com/s-r-e-e-r-a-j \n
-\033[0m""")
+     \033[0m
+     \033[1;33m* GitHub: https://github.com/s-r-e-e-r-a-j \n
+     \033[0m""")
 
 # Function to crack ZIP password
 def crack_zip(zip_file, wordlist, color_output):
@@ -145,9 +147,13 @@ def main():
         sys.exit(1)
 
     if filetype == "zip":
+        banner()
         crack_zip(file, wordlist, color_output)
     elif filetype == "rar":
+        banner()
         install_unrar_if_needed();
+        os.system("clear");
+        banner()
         crack_rar(file, wordlist, color_output)
     else:
         print(f"{RED}Invalid file type. Use 'zip' or 'rar'.{RESET}")
