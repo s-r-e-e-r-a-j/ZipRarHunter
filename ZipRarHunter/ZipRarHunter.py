@@ -200,6 +200,7 @@ def main():
         banner()
         install_7z_if_needed()
         os.system("clear")
+        banner()
         crack_zip(file, wordlist, color_output)
     elif filetype == "rar":
         os.system("clear")
