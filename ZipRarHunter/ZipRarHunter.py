@@ -32,6 +32,26 @@ def banner():
      \033[0m""")
 
 
+def install_7z_if_needed():
+    if shutil.which("7z"):
+        print("7z is already installed.")
+        return
+
+    print("7z is not installed. Installing with apt...")
+
+    try:
+        subprocess.run(["sudo", "apt", "update"], check=True)
+        subprocess.run(["sudo", "apt", "install", "-y", "p7zip-full"], check=True)
+
+        if shutil.which("7z"):
+            print("7z installed successfully.")
+        else:
+            print("Installation completed, but 7z is still not found.")
+    except subprocess.CalledProcessError as e:
+        print(f"Command failed with error: {e}")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+         
 # Function for detect Encryption method 
 def detect_encryption(zip_path):
     try:
@@ -178,8 +198,11 @@ def main():
     if filetype == "zip":
         os.system("clear")
         banner()
+        install_7z_if_needed()
+        os.system("clear")
         crack_zip(file, wordlist, color_output)
     elif filetype == "rar":
+        os.system("clear")
         banner()
         install_unrar_if_needed();
         os.system("clear")
