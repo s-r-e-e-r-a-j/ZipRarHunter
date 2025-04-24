@@ -31,38 +31,67 @@ def banner():
      \033[1;33m* GitHub: https://github.com/s-r-e-e-r-a-j \n
      \033[0m""")
 
+
+# Function for detect Encryption method 
+def detect_encryption(zip_path):
+    try:
+        output = subprocess.check_output(["7z", "l", "-slt", zip_path], stderr=subprocess.STDOUT).decode()
+        if "Method = AES" in output:
+            return "AES"
+        elif "Method = ZipCrypto" in output:
+            return "ZipCrypto"
+        else:
+            return "Not Encrypted"
+    except Exception as e:
+        print(f"{RED}Error detecting encryption: {e}{RESET}")
+        return "Error"
+         
 # Function to crack ZIP password
 def crack_zip(zip_file, wordlist, color_output):
-    with open(wordlist, 'r', encoding='utf-8') as f:
-        for password in f:
-            password = password.strip()
-            if not password:
-                continue
+    method = detect_encryption(zip_file)
+    if method == "Not Encrypted":
+        print(f"{GREEN}ZIP file is not encrypted.{RESET}")
+        return
+    elif method == "Error":
+        print(f"{RED}Could not determine encryption method.{RESET}")
+        return
 
-            if color_output:
-                print(f"{BLUE}Trying password: {password}{RESET}")
-            else:
-                print(f"Trying password: {password}")
+    try:
+        with open(wordlist, 'r', encoding='utf-8') as f:
+            for password in f:
+                password = password.strip()
+                if not password:
+                    continue
 
-            try:
-                with pyzipper.AESZipFile(zip_file) as zf:
-                    zf.pwd = password.encode()
-                    # Try to read a file to verify password
-                    test_file = zf.namelist()[0]
-                    zf.read(test_file)
+                if color_output:
+                    print(f"{BLUE}Trying password: {password}{RESET}")
+                else:
+                    print(f"Trying password: {password}")
 
-                    if color_output:
-                        print(f"{GREEN}Password found for ZIP file: {password}{RESET}")
-                    else:
-                        print(f"Password found for ZIP file: {password}")
+                try:
+                    if method == "AES":
+                        with pyzipper.AESZipFile(zip_file, 'r') as zf:
+                            zf.pwd = password.encode()
+                            files = zf.namelist()
+                            if not files:
+                                continue
+                            zf.read(files[0])
+                    elif method == "ZipCrypto":
+                        with pyzipper.ZipFile(zip_file, 'r') as zf:
+                            zf.setpassword(password.encode())
+                            files = zf.namelist()
+                            if not files:
+                                continue
+                            zf.read(files[0])
+
+                    print(f"{GREEN}Password found: {password}{RESET}")
                     return
-            except (RuntimeError, pyzipper.BadZipFile, pyzipper.LargeZipFile, Exception):
-                continue
+                except (RuntimeError, pyzipper.BadZipFile, pyzipper.LargeZipFile, KeyError):
+                    continue
 
-    if color_output:
-        print(f"{RED}Password not found for ZIP file.{RESET}")
-    else:
-        print(f"Password not found for ZIP file.")
+        print(f"{RED}Password not found.{RESET}")
+    except FileNotFoundError:
+        print(f"{RED}Wordlist not found: {wordlist}{RESET}")
 
 def install_unrar_if_needed():
     if shutil.which("unrar"):
