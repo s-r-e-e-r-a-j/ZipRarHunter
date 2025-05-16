@@ -157,7 +157,7 @@ def try_rar_password(rar_file, password):
     except Exception:
         return False
 
-def crack_rar(rar_file, wordlist, color_output, max_threads=4):
+def crack_rar(rar_file, wordlist, max_threads=4):
     try:
         with open(wordlist, 'r', encoding='utf-8') as f:
             passwords = [line.strip() for line in f if line.strip()]
