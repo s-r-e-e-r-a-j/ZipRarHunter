@@ -60,7 +60,7 @@ ziprarhunter -f /path/to/archive.rar -w /path/to/wordlist.txt -t rar
 - `-f` or `--file`: The path to the ZIP or RAR file you want to crack.
 - `-w` or `--wordlist`: The path to the wordlist file that contains potential passwords.
 - `-t` or `--type`: The type of archive. Acceptable values are zip or rar.
-- `--no-color`: Disable colored output. By default, the output will include color for easier readability.
+- `--threads`: Number of threads to use (default:4).
 ## Example Commands
 1. **Crack a ZIP file with a wordlist:**
 
@@ -72,10 +72,10 @@ ziprarhunter -f /path/to/archive.zip -w /path/to/wordlist.txt -t zip
 ```bash
 ziprarhunter -f /path/to/archive.rar -w /path/to/wordlist.txt -t rar
 ```
-3. **Disable colored output:**
+3. **Crack a zip file with 20 threads:**
 
 ```bash
-ziprarhunter -f /path/to/archive.zip -w /path/to/wordlist.txt -t zip --no-color
+ziprarhunter -f /path/to/archive.zip -w /path/to/wordlist.txt -t zip --threads 20
 ```
 ## Output Example
 ```bash
