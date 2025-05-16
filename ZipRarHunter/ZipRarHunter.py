@@ -30,7 +30,7 @@ def banner():
              |_|                               Developer: Sreeraj
 
      """)
-    print("\033[1;33m    * GitHub : https://github.com/s-r-e-e-r-a-j\033[0m\n")
+    print("\033[1;33m   * GitHub : https://github.com/s-r-e-e-r-a-j\033[0m\n")
     
 
 def install_7z_if_needed():
