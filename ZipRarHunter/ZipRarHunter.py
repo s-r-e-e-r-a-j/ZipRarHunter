@@ -1,3 +1,4 @@
+
 import pyzipper
 import rarfile
 import os
@@ -5,6 +6,7 @@ import sys
 import subprocess
 import shutil
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # ANSI color codes
 RED = '\033[0;31m'
@@ -14,8 +16,8 @@ YELLOW = '\033[1;33m'
 RESET = '\033[0m'
 
 def banner():
-
-     print("""\033[0;36m
+    print("\033[0;36m")
+    print(r"""
 
 
       _______       _____            _    _             _            
@@ -26,11 +28,10 @@ def banner():
      /_____|_| .__/|_|  \_\__,_|_|  |_|  |_|\__,_|_| |_|\__\___|_|   
              | |                                                     
              |_|                               Developer: Sreeraj
-         
-     \033[0m
-     \033[1;33m* GitHub: https://github.com/s-r-e-e-r-a-j \n
-     \033[0m""")
 
+     """)
+    print("\033[1;33m * GitHub : https://github.com/s-r-e-e-r-a-j\033[0m")
+    print("\033[0m")
 
 def install_7z_if_needed():
     if shutil.which("7z"):
@@ -52,7 +53,6 @@ def install_7z_if_needed():
     except Exception as e:
         print(f"Unexpected error: {e}")
          
-# Function for detect Encryption method 
 def detect_encryption(zip_path):
     try:
         output = subprocess.check_output(["7z", "l", "-slt", zip_path], stderr=subprocess.STDOUT).decode()
@@ -65,9 +65,28 @@ def detect_encryption(zip_path):
     except Exception as e:
         print(f"{RED}Error detecting encryption: {e}{RESET}")
         return "Error"
-         
-# Function to crack ZIP password
-def crack_zip(zip_file, wordlist, color_output):
+
+def try_zip_password(zip_file, password, method):
+    try:
+        if method == "AES":
+            with pyzipper.AESZipFile(zip_file, 'r') as zf:
+                zf.pwd = password.encode()
+                files = zf.namelist()
+                if not files:
+                    return False
+                zf.read(files[0])
+        elif method == "ZipCrypto":
+            with pyzipper.ZipFile(zip_file, 'r') as zf:
+                zf.setpassword(password.encode())
+                files = zf.namelist()
+                if not files:
+                    return False
+                zf.read(files[0])
+        return True
+    except Exception:
+        return False
+
+def crack_zip(zip_file, wordlist, max_threads=4):
     method = detect_encryption(zip_file)
     if method == "Not Encrypted":
         print(f"{GREEN}ZIP file is not encrypted.{RESET}")
@@ -78,36 +97,27 @@ def crack_zip(zip_file, wordlist, color_output):
 
     try:
         with open(wordlist, 'r', encoding='utf-8') as f:
-            for password in f:
-                password = password.strip()
-                if not password:
-                    continue
+            passwords = [line.strip() for line in f if line.strip()]
+            
+            with ThreadPoolExecutor(max_workers=max_threads) as executor:
+                future_to_password = {
+                    executor.submit(try_zip_password, zip_file, password, method): password
+                    for password in passwords
+                }
+                
+                for future in as_completed(future_to_password):
+                    password = future_to_password[future]
+                    try:
+                        if future.result():
+                            print(f"{GREEN}Password found: {password}{RESET}")
+                            executor.shutdown(wait=False)
+                            for f in future_to_password:
+                                f.cancel()
+                            return
 
-                if color_output:
-                    print(f"{BLUE}Trying password: {password}{RESET}")
-                else:
-                    print(f"Trying password: {password}")
-
-                try:
-                    if method == "AES":
-                        with pyzipper.AESZipFile(zip_file, 'r') as zf:
-                            zf.pwd = password.encode()
-                            files = zf.namelist()
-                            if not files:
-                                continue
-                            zf.read(files[0])
-                    elif method == "ZipCrypto":
-                        with pyzipper.ZipFile(zip_file, 'r') as zf:
-                            zf.setpassword(password.encode())
-                            files = zf.namelist()
-                            if not files:
-                                continue
-                            zf.read(files[0])
-
-                    print(f"{GREEN}Password found: {password}{RESET}")
-                    return
-                except (RuntimeError, pyzipper.BadZipFile, pyzipper.LargeZipFile, KeyError):
-                    continue
+                        print(f"{BLUE}Tried password: {password}{RESET}")
+                    except Exception:
+                        continue
 
         print(f"{RED}Password not found.{RESET}")
     except FileNotFoundError:
@@ -135,57 +145,61 @@ def install_unrar_if_needed():
         print(f"[!] Failed to install unrar: {e}")
         sys.exit(1)
 
-# Function to crack RAR password
-def crack_rar(rar_file, wordlist, color_output):
-    with open(wordlist, 'r', encoding='utf-8') as f:
-        for password in f:
-            password = password.strip()  # Remove trailing newlines and spaces
-            if not password:
-                continue  # Skip empty lines
+def try_rar_password(rar_file, password):
+    try:
+        with rarfile.RarFile(rar_file) as rf:
+            rf.setpassword(password)
+            test_file = rf.infolist()[0]
+            rf.extract(test_file.filename)
+            return True
+    except (rarfile.BadRarFile, rarfile.PasswordRequired):
+        return False
+    except Exception:
+        return False
 
-            # Display current password attempt
-            if color_output:
-                print(f"{BLUE}Trying password: {password}{RESET}")
-            else:
-                print(f"Trying password: {password}")
+def crack_rar(rar_file, wordlist, color_output, max_threads=4):
+    try:
+        with open(wordlist, 'r', encoding='utf-8') as f:
+            passwords = [line.strip() for line in f if line.strip()]
+            
+            with ThreadPoolExecutor(max_workers=max_threads) as executor:
+                future_to_password = {
+                    executor.submit(try_rar_password, rar_file, password): password
+                    for password in passwords
+                }
+                
+                for future in as_completed(future_to_password):
+                    password = future_to_password[future]
+                    try:
+                        if future.result():
+                            print(f"{GREEN}Password found for RAR file: {password}{RESET}")
+                            executor.shutdown(wait=False)
+                            for f in future_to_password:
+                                f.cancel()
+                            return
 
-            try:
-                with rarfile.RarFile(rar_file) as rf:
-                    rf.setpassword(password)  # Set the password for the RAR file
-                    # Try extracting a file to verify the password
-                    test_file = rf.infolist()[0]  # Get the first file in the archive
-                    rf.extract(test_file.filename)  # Attempt to extract the first file
-                    if color_output:
-                        print(f"{GREEN}Password found for RAR file: {password}{RESET}")
-                    else:
-                        print(f"Password found for RAR file: {password}")
-                    return
-            except rarfile.BadRarFile:
-                continue
-            except rarfile.PasswordRequired:
-                continue
+                        print(f"{BLUE}Tried password: {password}{RESET}")
+                    except Exception:
+                        continue
 
-    if color_output:
         print(f"{RED}Password not found for RAR file.{RESET}")
-    else:
-        print(f"Password not found for RAR file.")
+    except FileNotFoundError:
+        print(f"{RED}Wordlist not found: {wordlist}{RESET}")
 
-# Main function to handle user input and call appropriate crack functions
 def main():
-    # Set up argument parsing
     parser = argparse.ArgumentParser(description="Crack password for ZIP or RAR files.")
     parser.add_argument("-f", "--file", required=True, help="Path to the ZIP or RAR file.")
     parser.add_argument("-w", "--wordlist", required=True, help="Path to the wordlist file.")
     parser.add_argument("-t", "--type", choices=["zip", "rar"], required=True, help="Type of archive (zip or rar).")
-    parser.add_argument("--no-color", action="store_true", help="Disable colored output.")
+    parser.add_argument("--threads", type=int, default=4, help="Number of threads to use (default: 4).")
 
-    # Parse command-line arguments
+
     args = parser.parse_args()
 
     file = args.file
     wordlist = args.wordlist
     filetype = args.type
-    color_output = not args.no_color  # Default is to use color, unless --no-color is specified
+    max_threads = args.threads
 
     if not os.path.isfile(file):
         print(f"{RED}File {file} not found.{RESET}")
@@ -195,20 +209,24 @@ def main():
         print(f"{RED}Wordlist {wordlist} not found.{RESET}")
         sys.exit(1)
 
+    if max_threads < 1:
+        print(f"{RED}Number of threads must be at least 1.{RESET}")
+        sys.exit(1)
+
     if filetype == "zip":
         os.system("clear")
         banner()
         install_7z_if_needed()
         os.system("clear")
         banner()
-        crack_zip(file, wordlist, color_output)
+        crack_zip(file, wordlist, max_threads)
     elif filetype == "rar":
         os.system("clear")
         banner()
-        install_unrar_if_needed();
+        install_unrar_if_needed()
         os.system("clear")
         banner()
-        crack_rar(file, wordlist, color_output)
+        crack_rar(file, wordlist, max_threads)
     else:
         print(f"{RED}Invalid file type. Use 'zip' or 'rar'.{RESET}")
         sys.exit(1)
