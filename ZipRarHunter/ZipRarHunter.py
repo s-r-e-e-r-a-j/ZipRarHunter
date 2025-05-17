@@ -175,8 +175,8 @@ def try_rar_password(rar_file, password):
             rf.setpassword(password)
             rf.testrar();
             return True
-    # except (rarfile.BadRarFile, rarfile.PasswordRequired, rarfile.BadPassword):
-       # return False
+  # except (rarfile.BadRarFile, rarfile.PasswordRequired, rarfile.BadPassword):
+      # return False
     except Exception:
         return False
 
