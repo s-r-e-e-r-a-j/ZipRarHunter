@@ -41,7 +41,7 @@ cd ZipRarHunter
 3. **Ensure all dependencies are installed. If not, run:**
 
 ``` bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 4. **Navigate to the ZipRarHunter directory**
@@ -50,6 +50,7 @@ pip install -r requirements.txt
 cd ZipRarHunter
 ```
 5. **Install the tool**
+   **Run the install.py script**
 ```bash
 sudo python3 install.py
 ```
@@ -90,12 +91,7 @@ Password found : password123
 ```
 
 ## uninstallation
-```bash
-cd ZipRarHunter
-```
-```bash
-cd ZipRarHunter
-```
+**Run the install.py script**
 ```bash
 sudo python3 install.py
 ```
