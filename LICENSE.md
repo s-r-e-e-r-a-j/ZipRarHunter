@@ -1,4 +1,4 @@
-MIT LicensE
+MIT License
 
 Copyright (c) 2024 Sreeraj
 
