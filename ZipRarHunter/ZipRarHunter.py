@@ -58,10 +58,10 @@ def install_7z_if_needed():
             return False
     except subprocess.CalledProcessError as e:
         print(f"Command failed with error: {e}")
-        return False
+        sys.exit(1)
     except Exception as e:
         print(f"Unexpected error: {e}")
-        return False
+        sys.exit(1)
          
 def detect_encryption(zip_path):
     try:
@@ -158,7 +158,7 @@ def crack_zip(zip_file, wordlist, max_threads=4):
 
 def install_unrar_if_needed():
     if shutil.which("unrar"):
-        return  # Already installed
+        return True # Already installed
 
     print("[*] 'unrar' not found. Attempting installation using apt...")
 
@@ -174,8 +174,10 @@ def install_unrar_if_needed():
 
         if shutil.which("unrar"):
             print("unrar installed successfully.")
+            return True
         else:
             print("Installation completed, but unrar is still not found.")
+            return False
 
     except subprocess.CalledProcessError as e:
         print(f"[!] Failed to install unrar: {e}")
