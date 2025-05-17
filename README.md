@@ -85,7 +85,7 @@ ziprarhunter -f /path/to/archive.zip -w /path/to/wordlist.txt -t zip --threads 2
 ## Output Example
 ```bash
 Trying password: password123
-Password found for ZIP file: password123
+Password found : password123
 ```
 
 ## uninstallation
