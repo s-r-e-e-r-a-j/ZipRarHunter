@@ -6,7 +6,8 @@ import sys
 import subprocess
 import shutil
 import argparse
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed, wait, FIRST_COMPLETED
+import time
 
 # ANSI color codes
 RED = '\033[0;31m'
@@ -96,32 +97,55 @@ def crack_zip(zip_file, wordlist, max_threads=4):
         return
 
     try:
-        with open(wordlist, 'r', encoding='utf-8') as f:
-            passwords = [line.strip() for line in f if line.strip()]
-            
-            with ThreadPoolExecutor(max_workers=max_threads) as executor:
-                future_to_password = {
-                    executor.submit(try_zip_password, zip_file, password, method): password
-                    for password in passwords
-                }
-                
-                for future in as_completed(future_to_password):
-                    password = future_to_password[future]
-                    try:
-                        if future.result():
-                            print(f"{GREEN}Password found: {password}{RESET}")
-                            executor.shutdown(wait=False)
-                            for f in future_to_password:
-                                f.cancel()
-                            return
+        try:
+            f = open(wordlist, 'r', encoding='utf-8')
+            _ = f.readline()
+            f.seek(0)
+        except UnicodeDecodeError:
+            f = open(wordlist, 'r', encoding='latin-1', errors='ignore')
 
-                        print(f"{BLUE}Tried password: {password}{RESET}")
-                    except Exception:
-                        continue
+        with f, ThreadPoolExecutor(max_workers=max_threads) as executor:
+            futures = {}
+            for line in f:
+                password = line.strip()
+                if not password:
+                    continue
+
+                # Submit new job
+                future = executor.submit(try_zip_password, zip_file, password, method)
+                futures[future] = password
+
+                # Limit active futures to avoid overload
+                if len(futures) >= max_threads:
+                    done, _ = wait(futures, return_when=FIRST_COMPLETED)
+                    for future in done:
+                        pw = futures.pop(future)
+                        try:
+                            if future.result():
+                                print(f"{GREEN}Password found: {pw}{RESET}")
+                                executor.shutdown(wait=False)
+                                return
+                            else:
+                                print(f"{BLUE}Tried: {pw}{RESET}")
+                        except Exception:
+                            continue
+
+            # Final pending futures
+            for future in as_completed(futures):
+                pw = futures[future]
+                try:
+                    if future.result():
+                        print(f"{GREEN}Password found: {pw}{RESET}")
+                        return
+                    else:
+                        print(f"{BLUE}Tried: {pw}{RESET}")
+                except Exception:
+                    continue
 
         print(f"{RED}Password not found.{RESET}")
     except FileNotFoundError:
         print(f"{RED}Wordlist not found: {wordlist}{RESET}")
+
 
 def install_unrar_if_needed():
     if shutil.which("unrar"):
@@ -157,34 +181,56 @@ def try_rar_password(rar_file, password):
     except Exception:
         return False
 
+
 def crack_rar(rar_file, wordlist, max_threads=4):
     try:
-        with open(wordlist, 'r', encoding='utf-8') as f:
-            passwords = [line.strip() for line in f if line.strip()]
-            
-            with ThreadPoolExecutor(max_workers=max_threads) as executor:
-                future_to_password = {
-                    executor.submit(try_rar_password, rar_file, password): password
-                    for password in passwords
-                }
-                
-                for future in as_completed(future_to_password):
-                    password = future_to_password[future]
-                    try:
-                        if future.result():
-                            print(f"{GREEN}Password found for RAR file: {password}{RESET}")
-                            executor.shutdown(wait=False)
-                            for f in future_to_password:
-                                f.cancel()
-                            return
+        try:
+            f = open(wordlist, 'r', encoding='utf-8')
+            _ = f.readline()  # quick test to catch decoding error
+            f.seek(0)
+        except UnicodeDecodeError:
+            f = open(wordlist, 'r', encoding='latin-1', errors='ignore')
 
-                        print(f"{BLUE}Tried password: {password}{RESET}")
-                    except Exception:
-                        continue
+        with f, ThreadPoolExecutor(max_workers=max_threads) as executor:
+            futures = {}
+            for line in f:
+                password = line.strip()
+                if not password:
+                    continue
+
+                future = executor.submit(try_rar_password, rar_file, password)
+                futures[future] = password
+
+                if len(futures) >= max_threads:
+                    done, _ = wait(futures, return_when=FIRST_COMPLETED)
+                    for future in done:
+                        pw = futures.pop(future)
+                        try:
+                            if future.result():
+                                print(f"{GREEN}Password found for RAR file: {pw}{RESET}")
+                                executor.shutdown(wait=False)
+                                return
+                            else:
+                                print(f"{BLUE}Tried password: {pw}{RESET}")
+                        except Exception:
+                            continue
+
+            # Finish remaining futures
+            for future in as_completed(futures):
+                pw = futures[future]
+                try:
+                    if future.result():
+                        print(f"{GREEN}Password found for RAR file: {pw}{RESET}")
+                        return
+                    else:
+                        print(f"{BLUE}Tried password: {pw}{RESET}")
+                except Exception:
+                    continue
 
         print(f"{RED}Password not found for RAR file.{RESET}")
     except FileNotFoundError:
         print(f"{RED}Wordlist not found: {wordlist}{RESET}")
+
 
 def main():
     parser = argparse.ArgumentParser(description="Crack password for ZIP or RAR files.")
