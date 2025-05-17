@@ -87,7 +87,7 @@ ziprarhunter -f /path/to/archive.zip -w /path/to/wordlist.txt -t zip --threads 2
 ```
 ## Output Example
 ```bash
-Trying password: password123
+Tried: password
 Password found : password123
 ```
 
