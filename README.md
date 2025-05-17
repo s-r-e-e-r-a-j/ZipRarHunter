@@ -1,12 +1,17 @@
 ## ZipRarHunter
-ZipRarHunter is a command-line password cracking tool designed to crack passwords for ZIP and RAR archive files using a wordlist. It helps automate the process of password recovery from encrypted archive files.
+ZipRarHunter is a powerful command-line password cracking tool designed to crack passwords for ZIP and RAR archive files using a wordlist. It automates the process of password recovery from encrypted archives
 
 ## Features
-- **Support for ZIP and RAR Files:** ZipRarHunter works with both ZIP and RAR archives.
-- **Wordlist-based Cracking:** The tool uses a wordlist (a file containing potential passwords) to attempt cracking the password.
+- Cracking ZIP files encrypted with both **ZipCrypto** and **AES-256** encryption
 
-- **Real-time Feedback:** It shows the current password being attempted in real time, so you can track the progress.
-- **Supported OS:** Linux only (Tested on Kali, Ubuntu, etc.)
+- Cracking RAR4 archives using multithreaded brute-force attacks
+
+- Efficient memory usage by reading wordlists line-by-line (streaming)
+
+- Automatic detection of ZIP encryption methods
+
+- Encoding fallback support (**UTF-8 and Latin-1**) for various wordlists
+  
 ## Requirements
 - **Python 3.x:** Ensure that Python 3 is installed on your system.
 - **Dependencies:**
