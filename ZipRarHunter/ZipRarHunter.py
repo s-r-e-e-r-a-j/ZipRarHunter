@@ -37,7 +37,7 @@ def banner():
 def install_7z_if_needed():
     if shutil.which("7z"):
         print("7z is already installed.")
-        return
+        return True
 
     print("7z is not installed. Installing with apt...")
 
@@ -52,12 +52,16 @@ def install_7z_if_needed():
              subprocess.run(["apt", "install", "-y", "p7zip-full"], check=True)
         if shutil.which("7z"):
             print("7z installed successfully.")
+            return True
         else:
             print("Installation completed, but 7z is still not found.")
+            return False
     except subprocess.CalledProcessError as e:
         print(f"Command failed with error: {e}")
+        return False
     except Exception as e:
         print(f"Unexpected error: {e}")
+        return False
          
 def detect_encryption(zip_path):
     try:
