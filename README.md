@@ -5,6 +5,7 @@ ZipRarHunter is a powerful command-line password cracking tool designed to crack
 - Cracking ZIP files encrypted with both **ZipCrypto** and **AES-256** encryption
 
 - Cracking RAR4 archives using multithreaded brute-force attacks
+*(Also supports RAR5 if the paid version of UnRAR is installed)*
 
 - Efficient memory usage by reading wordlists line-by-line (streaming)
 
