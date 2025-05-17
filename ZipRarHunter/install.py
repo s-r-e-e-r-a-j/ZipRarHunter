@@ -1,4 +1,4 @@
-import oS
+import os
 choice = input('[+] to install press (Y) to uninstall press (N) >> ')
 run = os.system
 if str(choice) =='Y' or str(choice)=='y':
