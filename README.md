@@ -56,7 +56,7 @@ sudo python3 install.py
 ```
 **then enter `y` for install**
 ## Usage
-ZipRarHunter uses command-line arguments to specify the target file, wordlist, and file type (ZIP or RAR).
+ZipRarHunter uses command-line arguments to specify the target file, wordlist, file type (ZIP or RAR) and the number of threads.
 
 ## Basic Usage
 ```bash
