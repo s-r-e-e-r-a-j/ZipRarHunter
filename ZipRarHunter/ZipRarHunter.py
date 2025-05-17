@@ -42,9 +42,12 @@ def install_7z_if_needed():
     print("7z is not installed. Installing with apt...")
 
     try:
-        subprocess.run(["sudo", "apt", "update"], check=True)
-        subprocess.run(["sudo", "apt", "install", "-y", "p7zip-full"], check=True)
-
+        if os.geteuid() != 0:
+           subprocess.run(["sudo", "apt", "update"], check=True)
+           subprocess.run(["sudo", "apt", "install", "-y", "p7zip-full"], check=True)
+        else:
+             subprocess.run(["apt", "update"], check=True)
+             subprocess.run(["apt", "install", "-y", "p7zip-full"], check=True)
         if shutil.which("7z"):
             print("7z installed successfully.")
         else:
