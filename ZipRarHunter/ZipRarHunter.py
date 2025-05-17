@@ -43,9 +43,11 @@ def install_7z_if_needed():
 
     try:
         if os.geteuid() != 0:
+            # Not running as root, use sudo
            subprocess.run(["sudo", "apt", "update"], check=True)
            subprocess.run(["sudo", "apt", "install", "-y", "p7zip-full"], check=True)
         else:
+             # Already root
              subprocess.run(["apt", "update"], check=True)
              subprocess.run(["apt", "install", "-y", "p7zip-full"], check=True)
         if shutil.which("7z"):
