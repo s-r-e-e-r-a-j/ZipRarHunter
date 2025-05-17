@@ -182,7 +182,10 @@ def install_unrar_if_needed():
     except subprocess.CalledProcessError as e:
         print(f"[!] Failed to install unrar: {e}")
         sys.exit(1)
-
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        sys.exit(1)
+        
 def try_rar_password(rar_file, password):
     try:
         with rarfile.RarFile(rar_file) as rf:
