@@ -50,7 +50,8 @@ pip3 install -r requirements.txt
 cd ZipRarHunter
 ```
 5. **Install the tool**
-   **Run the install.py script**
+   
+   *Run the install.py script*
 ```bash
 sudo python3 install.py
 ```
