@@ -168,7 +168,10 @@ def install_unrar_if_needed():
             subprocess.run(["apt", "update"], check=True)
             subprocess.run(["apt", "install", "-y", "unrar"], check=True)
 
-        print("[+] 'unrar' installed successfully.")
+        if shutil.which("unrar"):
+            print("unrar installed successfully.")
+        else:
+            print("Installation completed, but unrar is still not found.")
 
     except subprocess.CalledProcessError as e:
         print(f"[!] Failed to install unrar: {e}")
