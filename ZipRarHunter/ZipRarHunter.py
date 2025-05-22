@@ -61,8 +61,6 @@ def detect_linux_distribution():
 
 def install_7z_if_needed():
     if shutil.which("7z"):
-        print("7z is already installed.")
-        time.sleep(2)
         return True
 
     distro = detect_linux_distribution()
