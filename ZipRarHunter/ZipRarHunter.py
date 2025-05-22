@@ -322,6 +322,7 @@ def crack_rar(rar_file, wordlist, max_threads=4):
 
 
 def main():
+    check_root()
     parser = argparse.ArgumentParser(description="Crack password for ZIP or RAR files.")
     parser.add_argument("-f", "--file", required=True, help="Path to the ZIP or RAR file.")
     parser.add_argument("-w", "--wordlist", required=True, help="Path to the wordlist file.")
