@@ -206,7 +206,6 @@ def crack_zip(zip_file, wordlist, max_threads=4):
 
 def install_unrar_if_needed():
     if shutil.which("unrar"):
-        time.sleep(2)
         return True  # Already installed
 
     distro = detect_linux_distribution()
