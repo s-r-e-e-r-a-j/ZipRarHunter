@@ -16,6 +16,7 @@ ZipRarHunter is a powerful command-line ethical hacking tool designed to crack p
 - Encoding fallback support (**UTF-8 and Latin-1**) for various wordlists
   
 ## Requirements
+- **Linux distributions: kalilinux, parrot os, ubuntu**
 - **Python 3.x:** Ensure that Python 3 is installed on your system.
 - **Dependencies:**
 - `pyzipper` (for handling ZIP files)
