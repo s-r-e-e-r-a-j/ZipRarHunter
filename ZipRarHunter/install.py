@@ -1,4 +1,9 @@
 import os
+import sys
+
+if os.geteuid() != 0:
+    print("please run as root or with sudo")
+    sys.exit(1)
 choice = input('[+] to install press (Y) to uninstall press (N) >> ')
 run = os.system
 if str(choice) =='Y' or str(choice)=='y':
