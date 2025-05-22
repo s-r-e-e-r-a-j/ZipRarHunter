@@ -33,6 +33,27 @@ def banner():
      """)
     print(f"{YELLOW}   * GitHub : https://github.com/s-r-e-e-r-a-j{RESET}\n")
     
+def detect_linux_distribution():
+    try:
+        if not os.path.exists("/etc/os-release"):
+            return "Unknown"
+
+        with open("/etc/os-release", "r") as f:
+            content = f.read().lower()
+
+        if any(distro in content for distro in ["debian", "ubuntu", "kali", "linuxmint", "raspbian", "parrot"]):
+            return "Debian"
+        elif any(distro in content for distro in ["rhel", "red hat", "centos", "fedora", "rocky", "alma"]):
+            return "RedHat"
+        elif any(distro in content for distro in ["arch", "manjaro", "endeavouros"]):
+            return "Arch"
+        else:
+            return "Unknown"
+
+    except Exception as e:
+        return f"{RED}Error: {e}{RESET}"
+
+    
 
 def install_7z_if_needed():
     if shutil.which("7z"):
