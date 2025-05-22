@@ -201,36 +201,58 @@ def crack_zip(zip_file, wordlist, max_threads=4):
     except FileNotFoundError:
         print(f"{RED}Wordlist not found: {wordlist}{RESET}")
 
-
 def install_unrar_if_needed():
     if shutil.which("unrar"):
-        return True # Already installed
+        time.sleep(2)
+        return True  # Already installed
 
-    print("[*] 'unrar' not found. Attempting installation using apt...")
+    distro = detect_linux_distribution()
+    print(f"Detected distribution family: {distro}")
+    print("[*] 'unrar' not found. Attempting installation...")
 
     try:
-        if os.geteuid() != 0:
-            # Not running as root, use sudo
-            subprocess.run(["sudo", "apt", "update"], check=True)
-            subprocess.run(["sudo", "apt", "install", "-y", "unrar"], check=True)
+        if distro == "Debian":
+            subprocess.run(["apt-get", "update"], check=True)
+            subprocess.run(["apt-get", "install", "-y", "unrar"], check=True)
+
+        elif distro == "RedHat":
+            if shutil.which("dnf"):
+                subprocess.run(["dnf", "-y", "update"], check=True)
+                subprocess.run(["dnf", "install", "-y", "unrar"], check=True)
+            elif shutil.which("yum"):
+                subprocess.run(["yum", "install", "-y", "unrar"], check=True)
+            else:
+                print("[!] Neither dnf nor yum found. Please install unrar manually.")
+                time.sleep(2)
+                return False
+
+        elif distro == "Arch":
+            subprocess.run(["pacman", "-Sy"], check=True)
+            subprocess.run(["pacman", "-S", "--noconfirm", "unrar"], check=True)
+
         else:
-            # Already root
-            subprocess.run(["apt", "update"], check=True)
-            subprocess.run(["apt", "install", "-y", "unrar"], check=True)
+            print("[!] Unsupported or unknown distribution. Please install unrar manually.")
+            time.sleep(2)
+            return False
 
         if shutil.which("unrar"):
             print("unrar installed successfully.")
+            time.sleep(2)
             return True
         else:
             print("Installation completed, but unrar is still not found.")
+            time.sleep(2)
             return False
 
     except subprocess.CalledProcessError as e:
         print(f"[!] Failed to install unrar: {e}")
+        time.sleep(2)
         sys.exit(1)
     except Exception as e:
         print(f"Unexpected error: {e}")
+        time.sleep(2)
         sys.exit(1)
+
         
 def try_rar_password(rar_file, password):
     try:
