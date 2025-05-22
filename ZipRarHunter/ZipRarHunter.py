@@ -53,36 +53,61 @@ def detect_linux_distribution():
     except Exception as e:
         return f"{RED}Error: {e}{RESET}"
 
-    
 
 def install_7z_if_needed():
     if shutil.which("7z"):
         print("7z is already installed.")
+        time.sleep(2)
         return True
 
-    print("7z is not installed. Installing with apt...")
-
+    distro = detect_linux_distribution()
+    print(f"Detected distribution family: {distro}")
     try:
-        if os.geteuid() != 0:
-            # Not running as root, use sudo
-           subprocess.run(["sudo", "apt", "update"], check=True)
-           subprocess.run(["sudo", "apt", "install", "-y", "p7zip-full"], check=True)
+        if distro == "Debian":
+            print("Updating package list and installing 7z with apt-get...")
+            subprocess.run(["apt-get", "update"], check=True)
+            subprocess.run(["apt-get", "install", "-y", "p7zip-full"], check=True)
+
+        elif distro == "RedHat":
+            print("Updating system and installing 7z with yum/dnf...")
+            if shutil.which("dnf"):
+                subprocess.run(["dnf", "-y", "update"], check=True)
+                subprocess.run(["dnf", "install", "-y", "p7zip"], check=True)
+            elif shutil.which("yum"):
+                subprocess.run(["yum", "install", "-y", "p7zip"], check=True)
+            else:
+                print("Neither dnf nor yum found. Please install 7z manually.")
+                time.sleep(2)
+                return False
+
+        elif distro == "Arch":
+            print("Updating package database and installing 7z with pacman...")
+            subprocess.run(["pacman", "-Sy"], check=True)
+            subprocess.run(["pacman", "-S", "--noconfirm", "p7zip"], check=True)
+
         else:
-             # Already root
-             subprocess.run(["apt", "update"], check=True)
-             subprocess.run(["apt", "install", "-y", "p7zip-full"], check=True)
+            print("Unsupported or unknown distribution. Please install 7z manually.")
+            time.sleep(2)
+            return False
+
         if shutil.which("7z"):
             print("7z installed successfully.")
+            time.sleep(2)
             return True
         else:
             print("Installation completed, but 7z is still not found.")
+            time.sleep(2)
             return False
+
     except subprocess.CalledProcessError as e:
         print(f"Command failed with error: {e}")
+        time.sleep(2)
         sys.exit(1)
     except Exception as e:
         print(f"Unexpected error: {e}")
+        time.sleep(2)
         sys.exit(1)
+
          
 def detect_encryption(zip_path):
     try:
