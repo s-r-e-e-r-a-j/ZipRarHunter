@@ -32,7 +32,12 @@ def banner():
 
      """)
     print(f"{YELLOW}   * GitHub : https://github.com/s-r-e-e-r-a-j{RESET}\n")
-    
+
+def check_root():
+    if os.geteuid() != 0:
+        print(f"{RED} please run this tool as root or with sudo{RESET}")
+        sys.exit(1)
+        
 def detect_linux_distribution():
     try:
         if not os.path.exists("/etc/os-release"):
