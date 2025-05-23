@@ -48,9 +48,9 @@ def detect_linux_distribution():
 
         if any(distro in content for distro in ["debian", "ubuntu", "kali", "linuxmint", "raspbian", "parrot"]):
             return "Debian"
-        elif any(distro in content for distro in ["rhel", "red hat", "centos", "fedora", "rocky", "alma","redhat"]):
+        elif any(distro in content for distro in ["rhel", "red hat", "centos", "fedora", "rocky", "alma", "redhat"]):
             return "RedHat"
-        elif any(distro in content for distro in ["arch", "manjaro", "endeavouros","blackarch"]):
+        elif any(distro in content for distro in ["arch", "manjaro", "endeavouros", "blackarch"]):
             return "Arch"
         else:
             return "Unknown"
