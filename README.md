@@ -1,6 +1,9 @@
 ## ZipRarHunter
 ZipRarHunter is a powerful command-line ethical hacking tool designed to crack passwords of ZIP and RAR archive files using a wordlist.It automates the process of password recovery from encrypted archives
 
+## Disclaimer
+ZipRarHunter should be used responsibly and legally. Unauthorized use of this tool to crack passwords without permission is illegal and unethical.
+
 ## Features
 - Cracking ZIP files encrypted with both **ZipCrypto** and **AES-256** encryption
 
@@ -103,8 +106,3 @@ sudo python3 install.py
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Disclaimer
-This tool is intended for educational purposes only. It should be used responsibly and legally. Unauthorized use of this tool to crack passwords without permission is illegal and unethical.
-
-
