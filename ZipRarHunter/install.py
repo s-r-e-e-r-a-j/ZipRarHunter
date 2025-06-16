@@ -8,7 +8,7 @@ choice = input('[+] to install press (Y) to uninstall press (N) >> ')
 run = os.system
 if str(choice) =='Y' or str(choice)=='y':
 
-    run('chmod 777 ZipRarHunter.py')
+    run('chmod 755 ZipRarHunter.py')
     run('mkdir /usr/share/ziprarhunter')
     run('cp ZipRarHunter.py /usr/share/ziprarhunter/ZipRarHunter.py')
 
