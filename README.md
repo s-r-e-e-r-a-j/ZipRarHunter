@@ -16,7 +16,7 @@ ZipRarHunter is a powerful command-line ethical hacking tool designed to crack p
 - Encoding fallback support (**UTF-8 and Latin-1**) for various wordlists
 
 ## Disclaimer
-ZipRarHunter should be used responsibly and legally. Unauthorized use of this tool to crack passwords without permission is illegal and unethical.
+ZipRarHunter should be used responsibly and legally. Unauthorized use of this tool to crack passwords without explicit permission is illegal and unethical. The author is not responsible for any misuse, and it should only be used in controlled environments or on systems for which you have proper authorization.
 
 ## Requirements
 - **Linux distributions:** `Debian`, `RedHat`, `Arch` 
