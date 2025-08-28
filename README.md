@@ -32,6 +32,20 @@ pip3 install pyzipper
 ```bash
 pip3 install rarfile
 ```
+**Note for Kali, Parrot, Ubuntu 23.04+ users:**
+
+If you see an error like:
+```go
+error: externally-managed-environment
+```
+then use:
+```bash
+pip3 install pyzipper --break-system-packages
+```
+```bash
+pip3 install rarfile --break-system-packages
+```
+
 ## Installation
 
 1. **Clone the repository:**
