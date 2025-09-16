@@ -19,7 +19,7 @@ ZipRarHunter is a powerful command-line ethical hacking tool designed to crack p
 ZipRarHunter should be used responsibly and legally. Unauthorized use of this tool to crack passwords without explicit permission is illegal and unethical. The author is not responsible for any misuse, and it should only be used in controlled environments or on systems for which you have proper authorization.
 
 ## Requirements
-- **Linux distributions:** `Debian`, `RedHat`, `Arch` 
+- **Linux distributions:** `Debian`, `RHEL`, `Arch` 
 - **Python 3.x:** Ensure that Python 3 is installed on your system.
 - **Dependencies:**
 - `pyzipper` (for handling ZIP files)
