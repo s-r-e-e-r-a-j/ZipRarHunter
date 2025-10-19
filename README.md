@@ -118,6 +118,12 @@ ziprarhunter -f /path/to/archive.rar -w /path/to/wordlist.txt -t rar
 ```bash
 ziprarhunter -f /path/to/archive.zip -w /path/to/wordlist.txt -t zip --threads 20
 ```
+
+4. **Crack a zip file using 6 CPU cores:**
+```bash
+ziprarhunter -f /path/to/archive.zip -w /path/to/wordlist.txt -t zip --cores 6
+```
+
 ## Output Example
 ```bash
 Tried: password
