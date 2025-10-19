@@ -333,7 +333,7 @@ def main():
     file = args.file
     wordlist = args.wordlist
     filetype = args.type
-    # max_threads = args.threads
+    max_threads = args.threads
 
     if args.threads and args.cores:
        print("Error: cannot use both --threads and --cores")
@@ -351,6 +351,7 @@ def main():
          globals()['ExecutorClass'] = None   # preserve old default
          max_workers = 4
          mode = "thread"
+    max_threads = max_workers
 
     if not os.path.isfile(file):
         print(f"{RED}File {file} not found.{RESET}")
@@ -384,5 +385,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
