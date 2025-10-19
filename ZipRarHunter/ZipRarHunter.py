@@ -325,8 +325,8 @@ def main():
     parser.add_argument("-f", "--file", required=True, help="Path to the ZIP or RAR file.")
     parser.add_argument("-w", "--wordlist", required=True, help="Path to the wordlist file.")
     parser.add_argument("-t", "--type", choices=["zip", "rar"], required=True, help="Type of archive (zip or rar).")
-    parser.add_argument("--threads", type=int, default=4, help="Number of threads to use (ThreadPoolExecutor).")
-    parser.add_argument("--cores", type=int, default=os.cpu_count(), help="Number of cores to use (ProcessPoolExecutor).")
+    parser.add_argument("--threads", nargs="?", const=4, type=int, default=None, help="Number of threads to use (ThreadPoolExecutor).")
+    parser.add_argument("--cores", nargs="?", const=os.cpu_count(), type=int, default=None, help="Number of cores to use (ProcessPoolExecutor).")
 
     args = parser.parse_args()
 
@@ -385,6 +385,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
