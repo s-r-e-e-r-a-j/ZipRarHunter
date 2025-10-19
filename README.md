@@ -7,7 +7,7 @@ ZipRarHunter is a powerful command-line ethical hacking tool designed to crack p
 - Cracking RAR4 archives using multithreaded brute-force attacks
 *(Also supports RAR5 if the paid version of UnRAR is installed)*
 
-- Improve cracking speed by specifying the number of threads with `--threads` option (default is 4)
+- Improve cracking speed with `--threads` for thread mode (default: `4`) or `--cores` for process mode (default: `uses all CPU cores`).
 
 - Efficient memory usage by reading wordlists line-by-line (streaming)
 
@@ -97,7 +97,11 @@ ziprarhunter -f /path/to/archive.rar -w /path/to/wordlist.txt -t rar
 - `-f` or `--file`: The path to the ZIP or RAR file you want to crack.
 - `-w` or `--wordlist`: The path to the wordlist file that contains potential passwords.
 - `-t` or `--type`: The type of archive. Acceptable values are zip or rar.
-- `--threads`: Number of threads to use (default:4).
+- `--threads`: Number of threads to use for cracking (default: 4). Mutually exclusive with `--cores`.
+- `--cores`: Number of CPU cores to use for process-based cracking (default is all cores). Mutually exclusive with `--threads`
+
+- Use either `--threads` (number of threads, default 4) or `--cores` (number of CPU processes, default = all cores). **Do not use both.**
+  
 ## Example Commands
 1. **Crack a ZIP file with a wordlist:**
 
