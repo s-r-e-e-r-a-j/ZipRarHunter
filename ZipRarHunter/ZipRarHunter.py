@@ -336,7 +336,7 @@ def main():
     max_threads = args.threads
 
     if args.threads and args.cores:
-       print("Error: cannot use both --threads and --cores")
+       print(f"{RED}Error: cannot use both --threads and --cores{RESET}")
        sys.exit(1)
 
     if args.cores:
@@ -385,6 +385,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
