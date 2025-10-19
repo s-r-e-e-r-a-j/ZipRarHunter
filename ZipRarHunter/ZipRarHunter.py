@@ -7,7 +7,7 @@ import sys
 import subprocess
 import shutil
 import argparse
-from concurrent.futures import ThreadPoolExecutor, as_completed, wait, FIRST_COMPLETED
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed, wait, FIRST_COMPLETED
 import time
 
 # ANSI color codes
@@ -163,7 +163,7 @@ def crack_zip(zip_file, wordlist, max_threads=4):
         except UnicodeDecodeError:
             f = open(wordlist, 'r', encoding='latin-1', errors='ignore')
 
-        with f, ThreadPoolExecutor(max_workers=max_threads) as executor:
+        with f, (globals().get('ExecutorClass') or ThreadPoolExecutor)(max_workers=max_threads) as executor:
             futures = {}
             for line in f:
                 password = line.strip()
@@ -278,7 +278,7 @@ def crack_rar(rar_file, wordlist, max_threads=4):
         except UnicodeDecodeError:
             f = open(wordlist, 'r', encoding='latin-1', errors='ignore')
 
-        with f, ThreadPoolExecutor(max_workers=max_threads) as executor:
+        with f, (globals().get('ExecutorClass') or ThreadPoolExecutor)(max_workers=max_threads) as executor:
             futures = {}
             for line in f:
                 password = line.strip()
@@ -325,15 +325,32 @@ def main():
     parser.add_argument("-f", "--file", required=True, help="Path to the ZIP or RAR file.")
     parser.add_argument("-w", "--wordlist", required=True, help="Path to the wordlist file.")
     parser.add_argument("-t", "--type", choices=["zip", "rar"], required=True, help="Type of archive (zip or rar).")
-    parser.add_argument("--threads", type=int, default=4, help="Number of threads to use (default: 4).")
-
+    parser.add_argument("--threads", type=int, help="Number of threads to use (ThreadPoolExecutor).")
+    parser.add_argument("--cores", type=int, help="Number of cores to use (ProcessPoolExecutor).")
 
     args = parser.parse_args()
 
     file = args.file
     wordlist = args.wordlist
     filetype = args.type
-    max_threads = args.threads
+    # max_threads = args.threads
+
+    if args.threads and args.cores:
+       print("Error: cannot use both --threads and --cores")
+       sys.exit(1)
+
+    if args.cores:
+       globals()['ExecutorClass'] = ProcessPoolExecutor   # or set a local variable
+       max_workers = min(args.cores, os.cpu_count() or 1)
+       mode = "process"
+    elif args.threads:
+         globals()['ExecutorClass'] = None
+         max_workers = args.threads
+         mode = "thread"
+    else:
+         globals()['ExecutorClass'] = None   # preserve old default
+         max_workers = 4
+         mode = "thread"
 
     if not os.path.isfile(file):
         print(f"{RED}File {file} not found.{RESET}")
@@ -367,4 +384,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
