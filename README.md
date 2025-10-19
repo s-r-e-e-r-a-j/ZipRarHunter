@@ -20,7 +20,7 @@ ZipRarHunter should be used responsibly and legally. Unauthorized use of this to
 
 ## Requirements
 - **Linux distributions:** `Debian`, `RHEL`, `Arch` 
-- **Python 3.x:** Ensure that Python 3 is installed on your system.
+- **Python 3.2 or above**: Make sure Python 3.2 or later is installed on your system.
 - **Dependencies:**
 - `pyzipper` (for handling ZIP files)
 - `rarfile` (for handling RAR files)
@@ -86,7 +86,7 @@ sudo python3 install.py
 ```
 **then enter `y` for install**
 ## Usage
-ZipRarHunter uses command-line arguments to specify the target file, wordlist, file type (ZIP or RAR) and the number of threads.
+ZipRarHunter uses command-line arguments to specify the target file, wordlist, file type (ZIP or RAR), and the number of threads or cores.
 
 ## Basic Usage
 ```bash
