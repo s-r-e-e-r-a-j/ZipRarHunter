@@ -293,7 +293,7 @@ def try_rar_password(rar_file, password, stop_event=None):
     try:
         with rarfile.RarFile(rar_file) as rf:
             rf.setpassword(password)
-            rf.testrar();
+            rf.testrar()
             return True
   # except (rarfile.BadRarFile, rarfile.PasswordRequired, rarfile.BadPassword):
       # return False
@@ -440,6 +440,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
