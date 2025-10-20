@@ -7,6 +7,7 @@ import sys
 import subprocess
 import shutil
 import argparse
+import multiprocessing
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed, wait, FIRST_COMPLETED
 import time
 
@@ -146,7 +147,7 @@ def try_zip_password(zip_file, password, method):
     except Exception:
         return False
 
-def crack_zip(zip_file, wordlist, max_threads=4):
+def crack_zip(zip_file, wordlist, max_threads=4, ExecutorClass=None, stop_event=None):
     method = detect_encryption(zip_file)
     if method == "Not Encrypted":
         print(f"{GREEN}ZIP file is not encrypted.{RESET}")
@@ -163,7 +164,9 @@ def crack_zip(zip_file, wordlist, max_threads=4):
         except UnicodeDecodeError:
             f = open(wordlist, 'r', encoding='latin-1', errors='ignore')
 
-        with f, (globals().get('ExecutorClass') or ThreadPoolExecutor)(max_workers=max_threads) as executor:
+        Executor = ExecutorClass or ThreadPoolExecutor
+        
+        with f, Executor(max_workers=max_threads) as executor:
             futures = {}
             for line in f:
                 password = line.strip()
@@ -269,7 +272,7 @@ def try_rar_password(rar_file, password):
         return False
 
 
-def crack_rar(rar_file, wordlist, max_threads=4):
+def crack_rar(rar_file, wordlist, max_threads=4, ExecutorClass=None, stop_event=None):
     try:
         try:
             f = open(wordlist, 'r', encoding='utf-8')
@@ -278,7 +281,9 @@ def crack_rar(rar_file, wordlist, max_threads=4):
         except UnicodeDecodeError:
             f = open(wordlist, 'r', encoding='latin-1', errors='ignore')
 
-        with f, (globals().get('ExecutorClass') or ThreadPoolExecutor)(max_workers=max_threads) as executor:
+        Executor = ExecutorClass or ThreadPoolExecutor
+        
+        with f, Executor(max_workers=max_threads) as executor:
             futures = {}
             for line in f:
                 password = line.strip()
@@ -340,19 +345,26 @@ def main():
        sys.exit(1)
 
     if args.cores:
-       globals()['ExecutorClass'] = ProcessPoolExecutor   # or set a local variable
+       ExecutorClass = ProcessPoolExecutor
        max_workers = min(args.cores, os.cpu_count())
        mode = "process"
     elif args.threads:
-         globals()['ExecutorClass'] = None
-         max_workers = args.threads
-         mode = "thread"
+       ExecutorClass = ThreadPoolExecutor
+       max_workers = args.threads
+       mode = "thread"
     else:
-         globals()['ExecutorClass'] = None   # preserve old default
-         max_workers = 4
-         mode = "thread"
-    max_threads = max_workers
+       ExecutorClass = ThreadPoolExecutor
+       max_workers = 4
+       mode = "thread"
 
+    # create a stop event that works in processes or threads
+    if mode == "process":
+        manager = multiprocessing.Manager()
+        stop_event = manager.Event()
+    else:
+        stop_event = threading.Event()
+    max_threads = max_workers
+    
     if not os.path.isfile(file):
         print(f"{RED}File {file} not found.{RESET}")
         sys.exit(1)
@@ -371,20 +383,21 @@ def main():
         install_7z_if_needed()
         os.system("clear")
         banner()
-        crack_zip(file, wordlist, max_threads)
+        crack_zip(file, wordlist, max_threads, ExecutorClass=ExecutorClass, stop_event=stop_event)
     elif filetype == "rar":
         os.system("clear")
         banner()
         install_unrar_if_needed()
         os.system("clear")
         banner()
-        crack_rar(file, wordlist, max_threads)
+        crack_rar(file, wordlist, max_threads, ExecutorClass=ExecutorClass, stop_event=stop_event)
     else:
         print(f"{RED}Invalid file type. Use 'zip' or 'rar'.{RESET}")
         sys.exit(1)
 
 if __name__ == "__main__":
     main()
+
 
 
 
