@@ -319,18 +319,28 @@ def crack_rar(rar_file, wordlist, max_threads=4, ExecutorClass=None, stop_event=
                 futures[future] = password
 
                 if len(futures) >= max_threads:
-                    done, _ = wait(futures, return_when=FIRST_COMPLETED)
+                    done, _ = wait(set(futures.keys()), return_when=FIRST_COMPLETED)
                     for future in done:
-                        pw = futures.pop(future)
+                        pw = futures.pop(future, None)
                         try:
                             if future.result():
-                                print(f"{GREEN}Password found for RAR file: {pw}{RESET}")
-                                executor.shutdown(wait=False)
-                                return
-                            else:
-                                print(f"{BLUE}Tried password: {pw}{RESET}")
+                               print(f"{GREEN}Password found: {pw}{RESET}")
+                               # signal other workers to stop
+                               try:
+                                   stop_event.set()
+                               except Exception:
+                                      pass
+                               # cancel remaining futures
+                               for fut in list(futures.keys()):
+                                   try:
+                                       fut.cancel()
+                                   except Exception:
+                                          pass
+                               return
+                             else:
+                                 pass
                         except Exception:
-                            continue
+                               continue
 
             # Finish remaining futures
             for future in as_completed(futures):
@@ -422,6 +432,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
