@@ -210,16 +210,20 @@ def crack_zip(zip_file, wordlist, max_threads=4, ExecutorClass=None, stop_event=
                               continue
 
             # Final pending futures
-            for future in as_completed(futures):
-                pw = futures[future]
-                try:
-                    if future.result():
+            for future in as_completed(list(futures.keys())):
+                 pw = futures.get(future)
+                 try:
+                     if future.result():
                         print(f"{GREEN}Password found: {pw}{RESET}")
+                        try:
+                            stop_event.set()
+                        except Exception:
+                               pass
                         return
-                    else:
-                        print(f"{BLUE}Tried: {pw}{RESET}")
-                except Exception:
-                    continue
+                     else:
+                          pass
+                 except Exception:
+                        continue
 
         print(f"{RED}Password not found.{RESET}")
     except FileNotFoundError:
@@ -343,16 +347,20 @@ def crack_rar(rar_file, wordlist, max_threads=4, ExecutorClass=None, stop_event=
                                continue
 
             # Finish remaining futures
-            for future in as_completed(futures):
-                pw = futures[future]
+            for future in as_completed(list(futures.keys())):
+                pw = futures.get(future)
                 try:
                     if future.result():
-                        print(f"{GREEN}Password found for RAR file: {pw}{RESET}")
-                        return
+                       print(f"{GREEN}Password found: {pw}{RESET}")
+                       try:
+                           stop_event.set()
+                       except Exception:
+                              pass
+                       return
                     else:
-                        print(f"{BLUE}Tried password: {pw}{RESET}")
+                         pass
                 except Exception:
-                    continue
+                       continue
 
         print(f"{RED}Password not found for RAR file.{RESET}")
     except FileNotFoundError:
@@ -432,6 +440,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
