@@ -128,7 +128,6 @@ ziprarhunter -f /path/to/archive.zip -w /path/to/wordlist.txt -t zip --cores 6
 
 ## Output Example
 ```bash
-Tried: password
 Password found : password123
 ```
 
