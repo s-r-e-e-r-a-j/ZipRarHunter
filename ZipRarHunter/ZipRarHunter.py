@@ -127,7 +127,14 @@ def detect_encryption(zip_path):
         print(f"{RED}Error detecting encryption: {e}{RESET}")
         return "Error"
 
-def try_zip_password(zip_file, password, method):
+def try_zip_password(zip_file, password, method, stop_event=None):
+
+    if stop_event is not None:
+        try:
+            if stop_event.is_set():
+                return False
+        except Exception:
+            pass
     try:
         if method == "AES":
             with pyzipper.AESZipFile(zip_file, 'r') as zf:
@@ -174,7 +181,7 @@ def crack_zip(zip_file, wordlist, max_threads=4, ExecutorClass=None, stop_event=
                     continue
 
                 # Submit new job
-                future = executor.submit(try_zip_password, zip_file, password, method)
+                future = executor.submit(try_zip_password, zip_file, password, method, stop_event)
                 futures[future] = password
 
                 # Limit active futures to avoid overload
@@ -260,7 +267,15 @@ def install_unrar_if_needed():
         sys.exit(1)
 
         
-def try_rar_password(rar_file, password):
+def try_rar_password(rar_file, password, stop_event=None):
+
+    if stop_event is not None:
+        try:
+            if stop_event.is_set():
+                return False
+        except Exception:
+            pass
+    
     try:
         with rarfile.RarFile(rar_file) as rf:
             rf.setpassword(password)
@@ -290,7 +305,7 @@ def crack_rar(rar_file, wordlist, max_threads=4, ExecutorClass=None, stop_event=
                 if not password:
                     continue
 
-                future = executor.submit(try_rar_password, rar_file, password)
+                future = executor.submit(try_rar_password, rar_file, password, stop_event)
                 futures[future] = password
 
                 if len(futures) >= max_threads:
@@ -397,6 +412,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
