@@ -204,7 +204,7 @@ def crack_zip(zip_file, wordlist, max_threads=4, ExecutorClass=None, stop_event=
                                    except Exception:
                                           pass
                                return
-                             else:
+                            else:
                                    pass
                         except Exception:
                                continue
@@ -341,9 +341,9 @@ def crack_rar(rar_file, wordlist, max_threads=4, ExecutorClass=None, stop_event=
                                    except Exception:
                                           pass
                                return
-                             else:
+                            else:
                                  pass
-                         except Exception:
+                        except Exception:
                                continue
 
             # Finish remaining futures
@@ -359,7 +359,7 @@ def crack_rar(rar_file, wordlist, max_threads=4, ExecutorClass=None, stop_event=
                        return
                     else:
                          pass
-                 except Exception:
+                except Exception:
                        continue
 
         print(f"{RED}Password not found for RAR file.{RESET}")
@@ -440,3 +440,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
