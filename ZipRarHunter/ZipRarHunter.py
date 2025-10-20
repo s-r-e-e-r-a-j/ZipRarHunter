@@ -191,13 +191,23 @@ def crack_zip(zip_file, wordlist, max_threads=4, ExecutorClass=None, stop_event=
                         pw = futures.pop(future, None)
                         try:
                             if future.result():
-                                print(f"{GREEN}Password found: {pw}{RESET}")
-                                executor.shutdown(wait=False)
-                                return
-                            else:
-                                print(f"{BLUE}Tried: {pw}{RESET}")
-                        except Exception:
-                            continue
+                               print(f"{GREEN}Password found: {pw}{RESET}")
+                               # signal other workers to stop
+                               try:
+                                   stop_event.set()
+                               except Exception:
+                                      pass
+                              # cancel remaining futures
+                               for fut in list(futures.keys()):
+                                   try:
+                                       fut.cancel()
+                                   except Exception:
+                                          pass
+                               return
+                             else:
+                                   pass
+                         except Exception:
+                              continue
 
             # Final pending futures
             for future in as_completed(futures):
@@ -412,6 +422,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
