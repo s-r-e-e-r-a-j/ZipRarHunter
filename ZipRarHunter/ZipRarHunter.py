@@ -186,9 +186,9 @@ def crack_zip(zip_file, wordlist, max_threads=4, ExecutorClass=None, stop_event=
 
                 # Limit active futures to avoid overload
                 if len(futures) >= max_threads:
-                    done, _ = wait(futures, return_when=FIRST_COMPLETED)
+                    done, _ = wait(set(futures.keys()), return_when=FIRST_COMPLETED)
                     for future in done:
-                        pw = futures.pop(future)
+                        pw = futures.pop(future, None)
                         try:
                             if future.result():
                                 print(f"{GREEN}Password found: {pw}{RESET}")
@@ -412,6 +412,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
