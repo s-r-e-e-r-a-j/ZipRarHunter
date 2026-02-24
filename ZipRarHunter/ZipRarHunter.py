@@ -87,8 +87,8 @@ def install_7z_if_needed():
                 return False
 
         elif distro == "Arch":
-            print("Updating package database and installing 7z with pacman...")
-            subprocess.run(["pacman", "-Sy"], check=True)
+            print("Updating system and installing 7z with pacman...")
+            subprocess.run(["pacman", "-Syu"], check=True)
             subprocess.run(["pacman", "-S", "--noconfirm", "p7zip"], check=True)
 
         else:
@@ -255,7 +255,7 @@ def install_unrar_if_needed():
                 return False
 
         elif distro == "Arch":
-            subprocess.run(["pacman", "-Sy"], check=True)
+            subprocess.run(["pacman", "-Syu"], check=True)
             subprocess.run(["pacman", "-S", "--noconfirm", "unrar"], check=True)
 
         else:
@@ -441,5 +441,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
